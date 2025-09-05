@@ -297,7 +297,7 @@ const App = () => {
   const [ingredients, setIngredients] = useState([]); // stores list of ingredients (first 20)
   const [searchTerm, setSearchTerm] = useState("");   // stores user input from search bar
   const [recipes, setRecipes] = useState([]);         // stores recipes fetched from API
-  const [selectedRecipe, setSelectedRecipe] = useState(null); // stores currently selected recipe details
+  const [selectedRecipe, setSelectedRecipe] = useState(); // stores currently selected recipe details
 
   // ----------------------------------------
   // Fetch ingredients (runs once when page loads)
@@ -336,6 +336,7 @@ const App = () => {
     } catch (error) {
       console.error("Error fetching recipes:", error);
       setRecipes([]); // reset recipes if API fails
+      console.log(selectedRecipe,"comming")
     }
   };
 
@@ -348,18 +349,32 @@ const App = () => {
         `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
       );
       const data = await res.json();
+      console.log(data)
+
 
       // Store detailed recipe in state (first meal returned)
       setSelectedRecipe(data.meals[0]);
+      console.log(data.meals[0], "new recipe data");
+      console.log(data)
+      console.log(data, 'food')
+      console.log(selectedRecipe,"receipeeeee")
     } catch (error) {
       console.error("Error fetching recipe details:", error);
     }
   };
 
+  useEffect(() => {
+  if (selectedRecipe) {
+    console.log(selectedRecipe, "updated recipeeeee");
+  }
+}, [selectedRecipe]);
+
+console.log(selectedRecipe, "website")
+
   // ----------------------------------------
   // JSX UI rendering starts here
   return (
-    <div className="min-h-screen flex flex-col bg-black text-white">
+    <div className="min-h-screen flex flex-col bg-gray-50">
 
       
       {/* ---------------- Navbar ---------------- */}
@@ -482,16 +497,22 @@ const App = () => {
             </button>
 
             {/* Recipe details */}
-            <h2 className="text-2xl font-bold mb-4">{selectedRecipe.strMeal}</h2>
-            <img
+            
+           <img
               src={selectedRecipe.strMealThumb}
               alt={selectedRecipe.strMeal}
               className="w-full h-60 object-cover rounded-lg mb-4"
               style={{ width: '200px', height: '200px' }}
             />
-            <p className="text-gray-700 mb-4">
+       <h1 className="text-blue-700 mb-2">{selectedRecipe.strMeal}</h1>
+<p className="text-gray-600">This is a tasty dish…</p>
+
+
+            <p className="text-blue-700 mb-4">
+          
               <strong>Category:</strong> {selectedRecipe.strCategory} |{" "}
-              <strong>Area:</strong> {selectedRecipe.strArea}
+              <strong>Area:</strong> {selectedRecipe.strArea
+}
             </p>
 
             {/* Instructions */}
